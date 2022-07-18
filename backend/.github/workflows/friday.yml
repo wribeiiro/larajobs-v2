@@ -1,0 +1,25 @@
+name: PHP Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: composer install --no-scripts
+
+      - name: Prepare Laravel Env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Execute tests (Unit) via PHPUnit 🧪
+        run: ./vendor/bin/phpunit --colors --testdox

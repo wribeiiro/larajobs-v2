@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class PassportAuthController extends Controller
+class SanctumAuthController extends Controller
 {
     /**
      * Register method
@@ -38,11 +39,10 @@ class PassportAuthController extends Controller
             'password' => bcrypt($request->password)
         ]);
 
-        $token = $user->createToken('Laravel9PassportAuth')->accessToken;
-
         return response()->json([
             'data' => [
-                'token' => $token
+                'user' => $user,
+                'token' => $user->createToken('Larajobs')->plainTextToken
             ],
             'message' => 'User was created with success.',
             'status' => Response::HTTP_CREATED
@@ -57,15 +57,14 @@ class PassportAuthController extends Controller
      */
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
-        if (auth()->attempt([
+        if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password
         ])) {
-            $token = auth()->user()->createToken('Laravel9PassportAuth')->accessToken;
-
             return response()->json([
                 'data' => [
-                    'token' => $token
+                    'user' => Auth::user(),
+                    'token' => Auth::user()->createToken('Larajobs')->accessToken
                 ],
                 'message' => 'Login has been done with success.',
                 'status' => Response::HTTP_OK
@@ -78,6 +77,22 @@ class PassportAuthController extends Controller
     }
 
     /**
+     * Logou user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request): \Illuminate\Http\JsonResponse
+    {
+        // Revoke the token that was used to authenticate the current request...
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'error' => 'User and token was disconnected'
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * User info method
      *
      * @return \Illuminate\Http\JsonResponse
@@ -85,7 +100,7 @@ class PassportAuthController extends Controller
     public function userInfo(): \Illuminate\Http\JsonResponse
     {
         return response()->json([
-            'data' => auth()->user(),
+            'data' => Auth::user(),
             'message' => 'User data has been returned with success.',
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
