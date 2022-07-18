@@ -64,7 +64,7 @@ class SanctumAuthController extends Controller
             return response()->json([
                 'data' => [
                     'user' => Auth::user(),
-                    'token' => Auth::user()->createToken('Larajobs')->accessToken
+                    'token' => Auth::user()->createToken('Larajobs')->plainTextToken
                 ],
                 'message' => 'Login has been done with success.',
                 'status' => Response::HTTP_OK
