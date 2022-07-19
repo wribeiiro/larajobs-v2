@@ -5,64 +5,63 @@ namespace Tests\Unit\App\Http\Controllers;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Http\Response;
 
 class SantumAuthControllerTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
+    private \App\Models\User $userFake;
+    private static string $userPassword = 'password';
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->userFake = \App\Models\User::factory()->create([
+            'password' => bcrypt(static::$userPassword),
+        ]);
     }
 
     public function test_user_can_login_with_correct_credentials()
     {
-        $user = \App\Models\User::factory()->create([
-            'password' => bcrypt($password = 'password'),
+        $response = $this->post('api/users/login', [
+            'email' => $this->userFake->email,
+            'password' => static::$userPassword
         ]);
 
-        $response = $this->post('users/authenticate', [
-            'email' => $user->email,
-            'password' => $password,
-        ]);
-
-        $response->assertRedirect('/listings/manage');
-        $this->assertAuthenticatedAs($user);
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertEquals('Login has been done with success.', $response['message']);
     }
 
     public function test_user_cannot_login_with_incorrect_password()
     {
-        $user = \App\Models\User::factory()->create([
-            'password' => bcrypt('beyblade'),
+        $response = $this->from('/login')->post('api/users/login', [
+            'email' => $this->userFake->email,
+            'password' => 'chama o amir'
         ]);
 
-        $response = $this->from('/login')->post('users/authenticate', [
-            'email' => $user->email,
-            'password' => 'de-ruim',
-        ]);
-
-        $response->assertRedirect('/login');
-        $response->assertSessionHasErrors('email');
-        $this->assertTrue(session()->hasOldInput('email'));
-        $this->assertFalse(session()->hasOldInput('password'));
-        $this->assertGuest();
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $this->assertEquals('Unauthorised. E-mail or password are invalid.', $response['message']);
     }
 
     public function test_user_can_logout()
     {
-        $user = \App\Models\User::factory()->create([
-            'password' => bcrypt($password = 'beyblade'),
+        $response = $this->post('api/users/login', [
+            'email' => $this->userFake->email,
+            'password' => static::$userPassword
         ]);
 
-        $response = $this->post('users/authenticate', [
-            'email' => $user->email,
-            'password' => $password,
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertEquals('Login has been done with success.', $response['message']);
+
+        /*$response = $this->post('api/users/logout', [], [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer " . $response['data']['token']
         ]);
 
-        $response->assertRedirect('/listings/manage');
-        $this->assertAuthenticatedAs($user);
-
-        $response = $this->post('/logout');
-        $response->assertRedirect('/');
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertEquals('User data has been returned with success.', $response['message']);*/
     }
 }
