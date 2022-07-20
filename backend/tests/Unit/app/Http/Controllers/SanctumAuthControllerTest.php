@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Http\Response;
+use Laravel\Sanctum\Sanctum;
 
 class SantumAuthControllerTest extends TestCase
 {
@@ -23,6 +24,39 @@ class SantumAuthControllerTest extends TestCase
         ]);
     }
 
+    public function test_user_register_with_success()
+    {
+        $response = $this->post('api/users/register', [
+            'email' => 'test@deubeyblade.com',
+            'password' => static::$userPassword
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['data', 'message', 'status']);
+    }
+
+    public function test_user_register_with_errors_email_already_exists()
+    {
+        $response = $this->post('api/users/register', [
+            'email' => $this->userFake->email,
+            'password' => static::$userPassword
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['data', 'message', 'status']);
+    }
+
+    public function test_user_register_with_errors()
+    {
+        $response = $this->post('api/users/register', [
+            'email' => 'test@error',
+            'password' => static::$userPassword
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure(['data', 'message', 'status']);
+    }
+
     public function test_user_can_login_with_correct_credentials()
     {
         $response = $this->post('api/users/login', [
@@ -30,38 +64,42 @@ class SantumAuthControllerTest extends TestCase
             'password' => static::$userPassword
         ]);
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['data', 'message', 'status']);
         $this->assertEquals('Login has been done with success.', $response['message']);
     }
 
     public function test_user_cannot_login_with_incorrect_password()
     {
-        $response = $this->from('/login')->post('api/users/login', [
+        $response = $this->post('api/users/login', [
             'email' => $this->userFake->email,
             'password' => 'chama o amir'
         ]);
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $this->assertEquals('Unauthorised. E-mail or password are invalid.', $response['message']);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertJsonStructure(['data', 'message', 'status']);
+        $this->assertEquals('Unauthorized. E-mail or password are invalid.', $response['message']);
+    }
+
+    public function test_user_should_view_info()
+    {
+        Sanctum::actingAs($this->userFake);
+
+        $response = $this->get('api/users/me');
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['data', 'message', 'status']);
+
+        $this->assertEquals('User data has been returned with success.', $response['message']);
     }
 
     public function test_user_can_logout()
     {
-        $response = $this->post('api/users/login', [
-            'email' => $this->userFake->email,
-            'password' => static::$userPassword
-        ]);
+        Sanctum::actingAs($this->userFake);
 
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertEquals('Login has been done with success.', $response['message']);
+        $response = $this->post('api/users/logout');
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['data', 'message', 'status']);
 
-        /*$response = $this->post('api/users/logout', [], [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'Authorization' => "Bearer " . $response['data']['token']
-        ]);
-
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertEquals('User data has been returned with success.', $response['message']);*/
+        $this->assertEquals('User and token was disconnected', $response['message']);
     }
 }
