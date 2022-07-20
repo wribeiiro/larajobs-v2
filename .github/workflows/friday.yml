@@ -8,9 +8,15 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Listing
+        run: ls -l
 
       - name: Install Dependencies
         run: composer install --no-scripts
