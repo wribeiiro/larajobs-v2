@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\SanctumAuthController;
-use App\Http\Controllers\API\JobController;
+use App\Http\Controllers\API\VacancyJobController;
 
 Route::controller(SanctumAuthController::class)->group(function () {
     Route::post('/users/register', 'register')->name('users.register');
@@ -10,7 +10,7 @@ Route::controller(SanctumAuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('jobs', JobController::class);
+    Route::resource('jobs', VacancyJobController::class);
     Route::post('/users/logout', [SanctumAuthController::class, 'logout'])->name('users.logout');
     Route::get('/users/me', [SanctumAuthController::class, 'me'])->name('users.me');
 });

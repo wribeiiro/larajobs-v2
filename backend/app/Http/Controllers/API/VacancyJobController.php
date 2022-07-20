@@ -5,10 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Job;
+use App\Models\VacancyJob;
 use Validator;
 
-class JobController extends Controller
+class VacancyJobController extends Controller
 {
     /**
      * Retrieve all jobs
@@ -18,7 +18,7 @@ class JobController extends Controller
     public function index(): \Illuminate\Http\JsonResponse
     {
         return response()->json([
-            'data' => Job::latest()->filter(request(['tag', 'search']))->paginate(6),
+            'data' => VacancyJob::latest()->filter(request(['tag', 'search']))->paginate(6),
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
     }
@@ -32,7 +32,7 @@ class JobController extends Controller
     public function show($id)
     {
         return response()->json([
-            'data' => Job::find($id),
+            'data' => VacancyJob::find($id),
             'message' => Response::$statusTexts[Response::HTTP_OK],
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
@@ -74,7 +74,7 @@ class JobController extends Controller
 
         $jobData['user_id'] = auth()->id();
 
-        $createdJob = Job::create($jobData);
+        $createdJob = VacancyJob::create($jobData);
 
         $jobData['id'] = $createdJob->id;
 
@@ -94,7 +94,7 @@ class JobController extends Controller
      */
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $job = Job::find($id);
+        $job = VacancyJob::find($id);
 
         if ($job === null) {
             return response()->json([
@@ -158,7 +158,7 @@ class JobController extends Controller
      */
     public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $job = Job::find($id);
+        $job = VacancyJob::find($id);
 
         if ($job === null) {
             return response()->json([

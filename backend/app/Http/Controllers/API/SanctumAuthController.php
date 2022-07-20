@@ -42,7 +42,7 @@ class SanctumAuthController extends Controller
         return response()->json([
             'data' => [
                 'user' => $user,
-                'token' => $user->createToken('Larajobs')->plainTextToken
+                'token' => 'Bearer ' . $user->createToken('Larajobs')->plainTextToken
             ],
             'message' => 'User was created with success.',
             'status' => Response::HTTP_CREATED
@@ -64,7 +64,7 @@ class SanctumAuthController extends Controller
             return response()->json([
                 'data' => [
                     'user' => Auth::user(),
-                    'token' => Auth::user()->createToken('Larajobs')->plainTextToken
+                    'token' => 'Bearer ' . Auth::user()->createToken('Larajobs')->plainTextToken
                 ],
                 'message' => 'Login has been done with success.',
                 'status' => Response::HTTP_OK
