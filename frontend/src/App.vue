@@ -1,13 +1,12 @@
 <template>
-  <h1>oi</h1>
-  <ButtonComponent />
+    <NavBar />
 </template>
 
 <script>
-import ButtonComponent from './components/ButtonComponent.vue'
+import NavBar from './components/include/NavBar.vue'
 export default {
   components: {
-    ButtonComponent
+    NavBar
   }
 }
 </script>
