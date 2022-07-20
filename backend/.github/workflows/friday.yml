@@ -1,9 +1,6 @@
 name: PHP Tests
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   build-test:
