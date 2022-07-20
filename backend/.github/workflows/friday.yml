@@ -14,16 +14,16 @@ jobs:
 
       - name: Install Dependencies
         run: composer install --no-scripts
-        working-directory: ./temp
+        working-directory: ./backend
 
       - name: Prepare Laravel Env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-        working-directory: ./temp
+        working-directory: ./backend
 
       - name: Generate key
         run: php artisan key:generate
-        working-directory: ./temp
+        working-directory: ./backend
 
       - name: Execute tests (Unit) via PHPUnit 🧪
         run: ./vendor/bin/phpunit --colors --testdox
-        working-directory: ./temp
+        working-directory: ./backend
