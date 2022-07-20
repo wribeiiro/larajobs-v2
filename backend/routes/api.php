@@ -12,4 +12,5 @@ Route::controller(SanctumAuthController::class)->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('jobs', JobController::class);
     Route::post('/users/logout', [SanctumAuthController::class, 'logout'])->name('users.logout');
+    Route::get('/users/me', [SanctumAuthController::class, 'me'])->name('users.me');
 });

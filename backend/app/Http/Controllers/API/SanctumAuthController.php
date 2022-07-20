@@ -73,7 +73,7 @@ class SanctumAuthController extends Controller
 
         return response()->json([
             'data' => null,
-            'message' => 'Unauthorised. E-mail or password are invalid.',
+            'message' => 'Unauthorized. E-mail or password are invalid.',
             'status' => Response::HTTP_UNAUTHORIZED
         ], Response::HTTP_UNAUTHORIZED);
     }
@@ -86,7 +86,7 @@ class SanctumAuthController extends Controller
      */
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
-        $user = Auth::user();
+        $user = $request->user();
         $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
 
         return response()->json([
@@ -99,12 +99,23 @@ class SanctumAuthController extends Controller
     /**
      * User info method
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function userInfo(): \Illuminate\Http\JsonResponse
+    public function me(Request $request): \Illuminate\Http\JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'data' => null,
+                'message' => 'Unauthorized.',
+                'status' => Response::HTTP_UNAUTHORIZED
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         return response()->json([
-            'data' => Auth::user(),
+            'data' => $user,
             'message' => 'User data has been returned with success.',
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
