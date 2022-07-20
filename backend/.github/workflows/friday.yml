@@ -8,21 +8,22 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
         run: composer install --no-scripts
+        working-directory: ./temp
 
       - name: Prepare Laravel Env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        working-directory: ./temp
 
       - name: Generate key
         run: php artisan key:generate
+        working-directory: ./temp
 
       - name: Execute tests (Unit) via PHPUnit 🧪
         run: ./vendor/bin/phpunit --colors --testdox
+        working-directory: ./temp
