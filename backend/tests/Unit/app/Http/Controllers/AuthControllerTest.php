@@ -8,7 +8,7 @@ use Tests\TestCase;
 use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
 
-class SantumAuthControllerTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
@@ -27,11 +27,12 @@ class SantumAuthControllerTest extends TestCase
     public function testUserRegisterWithSuccess()
     {
         $response = $this->post('api/users/register', [
+            'name' => 'hello',
             'email' => 'test@deubeyblade.com',
             'password' => static::$userPassword
         ]);
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        $response->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure(['data', 'message', 'status']);
     }
 

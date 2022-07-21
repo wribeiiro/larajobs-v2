@@ -19,6 +19,7 @@ class VacancyJobController extends Controller
     {
         return response()->json([
             'data' => VacancyJob::latest()->filter(request(['tag', 'search']))->paginate(6),
+            'message' => Response::$statusTexts[Response::HTTP_OK],
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
     }
@@ -29,10 +30,10 @@ class VacancyJobController extends Controller
     * @param string $uuid
     * @return \Illuminate\Http\Response
     */
-    public function show(int $uuid)
+    public function show(string $uuid)
     {
         return response()->json([
-            'data' => VacancyJob::find($string),
+            'data' => VacancyJob::find($uuid),
             'message' => Response::$statusTexts[Response::HTTP_OK],
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
@@ -63,7 +64,8 @@ class VacancyJobController extends Controller
 
         if ($jobValidator->fails()){
             return response()->json([
-                'data' => $jobValidator->errors(),
+                'data' => null,
+                'message' => $jobValidator->errors(),
                 'status' => Response::HTTP_UNPROCESSABLE_ENTITY
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -113,27 +115,6 @@ class VacancyJobController extends Controller
         }
 
         $jobData = $request->all();
-
-        $jobValidator = Validator::make($jobData, [
-            'title' => 'required',
-            'company' => ['required'],
-            'location' => 'required',
-            'website' => 'required',
-            'email' => ['required', 'email'],
-            'tags' => 'required',
-            'description' => 'required',
-            'level' => 'required',
-            'contract' => 'required',
-            'salary_range' => 'required'
-        ]);
-
-        if ($jobValidator->fails()){
-            return response()->json([
-                'data' => null,
-                'message' => $jobValidator->errors(),
-                'status' => Response::HTTP_UNPROCESSABLE_ENTITY
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
         if ($request->hasFile('logo')) {
             $jobData['logo'] = $request->file('logo')->store('logos', 'public');
