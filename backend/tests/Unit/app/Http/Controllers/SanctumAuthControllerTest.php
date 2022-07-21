@@ -24,7 +24,7 @@ class SantumAuthControllerTest extends TestCase
         ]);
     }
 
-    public function test_user_register_with_success()
+    public function testUserRegisterWithSuccess()
     {
         $response = $this->post('api/users/register', [
             'email' => 'test@deubeyblade.com',
@@ -35,7 +35,7 @@ class SantumAuthControllerTest extends TestCase
             ->assertJsonStructure(['data', 'message', 'status']);
     }
 
-    public function test_user_register_with_errors_email_already_exists()
+    public function testUserRegisterWithErrorsEmailAlreadyExists()
     {
         $response = $this->post('api/users/register', [
             'email' => $this->userFake->email,
@@ -46,7 +46,7 @@ class SantumAuthControllerTest extends TestCase
             ->assertJsonStructure(['data', 'message', 'status']);
     }
 
-    public function test_user_register_with_errors()
+    public function testUserRegisterWithErrors()
     {
         $response = $this->post('api/users/register', [
             'email' => 'test@error',
@@ -57,7 +57,7 @@ class SantumAuthControllerTest extends TestCase
             ->assertJsonStructure(['data', 'message', 'status']);
     }
 
-    public function test_user_can_login_with_correct_credentials()
+    public function testUserCanLoginWithCorrectCredentials()
     {
         $response = $this->post('api/users/login', [
             'email' => $this->userFake->email,
@@ -69,7 +69,7 @@ class SantumAuthControllerTest extends TestCase
         $this->assertEquals('Login has been done with success.', $response['message']);
     }
 
-    public function test_user_cannot_login_with_incorrect_password()
+    public function testUserCantLoginWithIncorrectPassword()
     {
         $response = $this->post('api/users/login', [
             'email' => $this->userFake->email,
@@ -81,7 +81,7 @@ class SantumAuthControllerTest extends TestCase
         $this->assertEquals('Unauthorized. E-mail or password are invalid.', $response['message']);
     }
 
-    public function test_user_should_view_info()
+    public function testUserShouldViewInfo()
     {
         Sanctum::actingAs($this->userFake);
 
@@ -92,7 +92,7 @@ class SantumAuthControllerTest extends TestCase
         $this->assertEquals('User data has been returned with success.', $response['message']);
     }
 
-    public function test_user_can_logout()
+    public function testUserLogout()
     {
         Sanctum::actingAs($this->userFake);
 

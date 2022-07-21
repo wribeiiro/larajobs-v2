@@ -26,13 +26,13 @@ class VacancyJobController extends Controller
     /**
     * Show the specified job.
     *
-    * @param int $id
+    * @param string $uuid
     * @return \Illuminate\Http\Response
     */
-    public function show($id)
+    public function show(int $uuid)
     {
         return response()->json([
-            'data' => VacancyJob::find($id),
+            'data' => VacancyJob::find($string),
             'message' => Response::$statusTexts[Response::HTTP_OK],
             'status' => Response::HTTP_OK
         ], Response::HTTP_OK);
@@ -89,12 +89,12 @@ class VacancyJobController extends Controller
      * Update a job
      *
      * @param Request $request
-     * @param int $id
+     * @param string $uuid
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
+    public function update(Request $request, string $uuid): \Illuminate\Http\JsonResponse
     {
-        $job = VacancyJob::find($id);
+        $job = VacancyJob::find($uuid);
 
         if ($job === null) {
             return response()->json([
@@ -139,7 +139,7 @@ class VacancyJobController extends Controller
             $jobData['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        $jobData['id'] = $job->id;
+        $jobData['uuid'] = $job->id;
 
         $job->update($jobData);
 
@@ -153,12 +153,12 @@ class VacancyJobController extends Controller
     /**
      * Destroy a job
      *
-     * @param int $job
+     * @param string $job
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id): \Illuminate\Http\JsonResponse
+    public function destroy(string $uuid): \Illuminate\Http\JsonResponse
     {
-        $job = VacancyJob::find($id);
+        $job = VacancyJob::find($uuid);
 
         if ($job === null) {
             return response()->json([
