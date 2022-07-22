@@ -1,12 +1,25 @@
 <template>
-    <NavBar />
+    <div class="common-layout">
+      <el-container>
+        <el-header>
+          <NavBarVue />
+        </el-header>
+        <el-main>Main</el-main>
+        <el-footer>
+          <FooterVue />
+        </el-footer>
+      </el-container>
+    </div>
 </template>
 
 <script>
-import NavBar from './components/include/NavBar.vue'
+import NavBarVue from './components/include/NavBarVue.vue';
+import FooterVue from './components/include/FooterVue.vue';
+
 export default {
   components: {
-    NavBar
+    NavBarVue,
+    FooterVue
   }
 }
 </script>
