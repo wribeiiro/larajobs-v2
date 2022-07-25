@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\VacancyJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\VacancyJob;
-use Validator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 
 class VacancyJobController extends Controller
 {
     /**
      * Retrieve all jobs
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         return response()->json([
             'data' => VacancyJob::latest()->filter(request(['tag', 'search']))->paginate(6),
@@ -43,9 +44,9 @@ class VacancyJobController extends Controller
      * Create a job
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function store(Request $request): \Illuminate\Http\JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $jobData = $request->all();
 
@@ -92,9 +93,9 @@ class VacancyJobController extends Controller
      *
      * @param Request $request
      * @param string $uuid
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $uuid): \Illuminate\Http\JsonResponse
+    public function update(Request $request, string $uuid): JsonResponse
     {
         $job = VacancyJob::find($uuid);
 
@@ -135,9 +136,9 @@ class VacancyJobController extends Controller
      * Destroy a job
      *
      * @param string $job
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function destroy(string $uuid): \Illuminate\Http\JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
         $job = VacancyJob::find($uuid);
 
