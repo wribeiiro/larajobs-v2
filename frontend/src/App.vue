@@ -1,15 +1,9 @@
 <template>
-    <div class="common-layout">
-      <el-container>
-        <el-header>
-          <NavBarVue />
-        </el-header>
-        <el-main>Main</el-main>
-        <el-footer>
-          <FooterVue />
-        </el-footer>
-      </el-container>
-    </div>
+  <div class="container">
+    <NavBarVue />
+    <router-view></router-view>
+    <FooterVue />
+  </div>
 </template>
 
 <script>

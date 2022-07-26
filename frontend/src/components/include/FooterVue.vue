@@ -1,9 +1,9 @@
 <template>
-  <el-row :gutter="10">
-    <el-col :span="24" class="text-center font">
-      {{this.getMessage()}}
-    </el-col>
-  </el-row>
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container text-center">
+      <span class="text-muted">{{this.getMessage()}}</span>
+    </div>
+  </footer>
 </template>
 
 <script>
