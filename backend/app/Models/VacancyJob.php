@@ -5,10 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Uuid;
 
-class Job extends Model
+class VacancyJob extends Model
 {
-    use HasFactory;
+    use HasFactory, Uuid;
+
+    public $incrementing = false;
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.

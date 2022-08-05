@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Uuid;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Uuid;
+
+    public $incrementing = false;
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -47,8 +57,8 @@ class User extends Authenticatable
      *
      * @return HasMany
      */
-    public function jobs(): HasMany
+    public function vacancy_jobs(): HasMany
     {
-        return $this->hasMany(Job::class, 'user_id');
+        return $this->hasMany(VacancyJob::class, 'user_id');
     }
 }

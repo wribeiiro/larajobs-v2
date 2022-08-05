@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
-class SanctumAuthController extends Controller
+class AuthController extends Controller
 {
     /**
      * Register method
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function register(Request $request): \Illuminate\Http\JsonResponse
+    public function register(Request $request): JsonResponse
     {
         $userValidator = Validator::make($request->all(), [
             'name' => 'required|min:4',
@@ -42,7 +43,7 @@ class SanctumAuthController extends Controller
         return response()->json([
             'data' => [
                 'user' => $user,
-                'token' => $user->createToken('Larajobs')->plainTextToken
+                'token' => 'Bearer ' . $user->createToken('Larajobs')->plainTextToken
             ],
             'message' => 'User was created with success.',
             'status' => Response::HTTP_CREATED
@@ -53,9 +54,9 @@ class SanctumAuthController extends Controller
      * Login method
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function login(Request $request): \Illuminate\Http\JsonResponse
+    public function login(Request $request): JsonResponse
     {
         if (Auth::attempt([
             'email' => $request->email,
@@ -64,7 +65,7 @@ class SanctumAuthController extends Controller
             return response()->json([
                 'data' => [
                     'user' => Auth::user(),
-                    'token' => Auth::user()->createToken('Larajobs')->plainTextToken
+                    'token' => 'Bearer ' . Auth::user()->createToken('Larajobs')->plainTextToken
                 ],
                 'message' => 'Login has been done with success.',
                 'status' => Response::HTTP_OK
@@ -82,9 +83,9 @@ class SanctumAuthController extends Controller
      * Logou user
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function logout(Request $request): \Illuminate\Http\JsonResponse
+    public function logout(Request $request): JsonResponse
     {
         $user = $request->user();
         $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
@@ -100,9 +101,9 @@ class SanctumAuthController extends Controller
      * User info method
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function me(Request $request): \Illuminate\Http\JsonResponse
+    public function me(Request $request): JsonResponse
     {
         $user = $request->user();
 
