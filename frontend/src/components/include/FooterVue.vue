@@ -1,9 +1,13 @@
 <template>
-  <footer class="footer mt-auto py-3 bg-light">
-    <div class="container text-center">
-      <span class="text-muted">{{this.getMessage()}}</span>
+  <div class="row align-items-end">
+    <div class="col">
+      <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+          <span class="text-muted">{{ this.getMessage() }}</span>
+        </div>
+      </footer>
     </div>
-  </footer>
+  </div>
 </template>
 
 <script>

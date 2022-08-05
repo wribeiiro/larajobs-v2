@@ -1,8 +1,9 @@
 <template>
   <main class="form-signin">
     <form>
-      <i class="fa-solid fa-user-5"></i>
-      <h1 class="h3 mb-3 fw-normal">Entrar</h1>
+      <div class="text-center">
+        <h1 class="h3 mb-3 fw-normal">Login</h1>
+      </div>
       <div class="form-floating">
         <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
         <label for="floatingInput">Email address</label>
@@ -22,6 +23,10 @@ export default {
   name: 'LoginView',
   data() {
     return {
+      input: {
+        email: '',
+        password: ''
+      },
       version: '1.0.0'
     }
   }
@@ -46,6 +51,8 @@ body {
   max-width: 330px;
   padding: 15px;
   margin: auto;
+  margin-top: 150px;
+  margin-bottom: 150px;
 }
 
 .form-signin .checkbox {
