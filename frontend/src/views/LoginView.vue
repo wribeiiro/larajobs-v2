@@ -13,7 +13,10 @@
         <label for="floatingPassword">Password</label>
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
-      <p class="mt-2 mb-3 text-muted text-center">version {{version}}</p>
+      <div class="text-center">
+        <router-link :to="'/register'" class="link-secondary">não tem uma conta?</router-link>
+        <p class="mb-3 text-muted text-center">version {{ version }}</p>
+      </div>
     </form>
   </main>
 </template>

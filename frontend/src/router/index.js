@@ -1,17 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingView from '../views/LandingView.vue';
 import Login from '../views/LoginView.vue';
+import Register from '../views/RegisterView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: LandingView
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
 ]
 
