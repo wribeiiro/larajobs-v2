@@ -4,27 +4,27 @@ import Login from '../views/LoginView.vue';
 import Register from '../views/RegisterView.vue';
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: LandingView
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  }
+    {
+        path: '/',
+        name: 'Home',
+        component: LandingView
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
+    }
 ]
 
 const router = createRouter({
-  linkExactActiveClass: 'active',
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+    linkExactActiveClass: 'active',
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 })
 
 export default router
