@@ -1,9 +1,10 @@
-FROM php:8.1.0-apache
+FROM php:8.1.1-apache
 
-USER root
+# Arguments
+ARG user=well
+ARG uid=1000
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
         libpng-dev \
         zlib1g-dev \
@@ -20,13 +21,28 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip \
     && docker-php-source delete
 
+# Copy configuration apache
 COPY ./vhost.conf /etc/apache2/sites-available/000-default.conf
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
+# Set rewrite modules
 RUN chown -R www-data:www-data /var/www/html \
     && a2enmod rewrite
 
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+
+# Expose port
 EXPOSE 80
 
+# Set working directory
 WORKDIR /var/www/html/backend
+
+USER $user
