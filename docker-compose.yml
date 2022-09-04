@@ -12,6 +12,18 @@ services:
       - '8001:80'
     volumes:
       - ./backend/:/var/www/html/backend
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: host.docker.internal
+      DB_DATABASE: larajobs
+      DB_USERNAME: larajobs
+      DB_PASSWORD: root
+      APP_KEY: c08cbbfd6eefc83ac6d23c4c791277e4
+      APP_URL: http://localhost:8001
+      APP_ENV: local
+      APP_DEBUG: "true"
+    depends_on:
+      - database_app
     networks:
       - app-network
 
